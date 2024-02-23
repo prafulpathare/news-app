@@ -2,9 +2,7 @@
 
 App is developed to fetch and serve latest and trending news in globe and show short content for faster readability.
 
-#
-
-## Set up 
+### Set up 
 1. Install dependencies
     ```sh
     $ npm install
