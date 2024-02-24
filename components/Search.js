@@ -1,6 +1,33 @@
 import { useFonts } from 'expo-font';
 import { useCallback } from 'react';
-import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+
+const tags = [
+    {
+        id: 29883,
+        label: 'All'
+    },
+    {
+        id: 9238,
+        label: 'Politics'
+    },
+    {
+        id: 98342,
+        label: 'Sports'
+    },
+    {
+        id: 92382389,
+        label: 'Education'
+    },
+    {
+        id: 283093,
+        label: 'Games'
+    },
+    {
+        id: 92388923,
+        label: 'Bollywood'
+    },
+]
 
 const data = [
     {
@@ -60,11 +87,10 @@ const data = [
 ];
 
 
-export default function Home() {
+export default function search() {
 
     const [fontsLoaded, fontError] = useFonts({
         'pt-sans': require('../assets/fonts/pt-sans/PTS55F.ttf'),
-        'pt-sans-b': require('../assets/fonts/pt-sans/PTC75F.ttf'),
         'open-sans-b': require('../assets/fonts/open-sans/bold.ttf'),
         'open-sans': require('../assets/fonts/open-sans/regular.ttf'),
     });
@@ -81,66 +107,53 @@ export default function Home() {
 
     return (
         <View style={styles.container} onLayout={onLayoutRootView}>
-            <ScrollView>
-                    <Text style={{...styles.headLabels, marginTop: Dimensions.get('screen').height * 0.04 }}>Breaking News</Text>
+            <ScrollView style={{
+            }}>
 
+                <View style={styles.headerWrapper}>
+                    <Text style={styles.headerWrapper.label}>Discover</Text>
+                    <Text style={styles.headerWrapper.subLabel}>News from all around the world</Text>
+
+                    <View style={styles.searchWrapper}>
+                        <Image source={require('../assets/search.png')} resizeMode={'contain'} tintColor={'#444'} style={styles.searchWrapper.icon} />
+                        <TextInput placeholder={'Search...'} cursorColor={'#000'} style={styles.searchWrapper.placeholder} />
+                    </View>
+                </View>
+
+
+                <View style={{}}>
                     <FlatList
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
-                        data={data}
+                        data={tags}
                         renderItem={({ item, index, separators }) => (
                             <View
                                 key={item.key}
                                 onPress={() => this._onPress(item)}
-                                style={{
-                                    maxWidth: 350,
-                                }}
+                                style={styles.tagsWrapper}
                             >
-                                <View style={{
-                                    paddingHorizontal: 10
-                                }}>
-                                    <Image source={{ uri: item.cover }} style={{
-                                        height: 200,
-                                        borderRadius: 10
-                                    }} />
-                                    <View style={{
-                                        padding: 10,
-                                        paddingHorizontal: 0
-                                    }}>
-                                        <Text style={styles.caption}>{item.title}</Text>
-                                    </View>
-                                </View>
+                                <Text style={styles.tagsWrapper.label}>{item.label}</Text>
                             </View>
                         )}
                     />
-               
-                    <Text style={styles.headLabels}>Recommendation</Text>
+
                     <FlatList
+                        style={styles.resultsWrapper}
                         data={data}
                         renderItem={({ item, index, separators }) => (
                             <View
                                 key={item.key}
                                 onPress={() => this._onPress(item)}
-                                style={{
-                                    flexDirection: 'row',
-                                    padding: 10
-                                }}
+                                style={styles.resultsWrapper.itemWrapper}
                             >
-
-                                <Image source={{ uri: item.cover }} style={{
-                                    flex: 4,
-                                    borderRadius: 5,
-                                }} />
-                                <View style={{
-                                    flex: 10,
-                                    marginLeft: 10
-                                }}>
+                                <Image source={{ uri: item.cover }} style={styles.resultsWrapper.itemWrapper.cover} />
+                                <View style={styles.resultsWrapper.itemWrapper.contextWrapper}>
                                     <Text style={styles.caption}>{item.title}</Text>
                                 </View>
                             </View>
                         )}
                     />
-
+                </View>
             </ScrollView>
         </View>
     );
@@ -148,15 +161,71 @@ export default function Home() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#fff',
     },
     headLabels: {
         padding: 15,
-        fontSize: 20,
-        fontFamily: 'open-sans-b'
+        fontSize: 25,
+        fontFamily: 'pt-sans'
     },
     caption: {
-        fontFamily: 'open-sans'
+
+    },
+    headerWrapper: {
+        marginTop: Dimensions.get('screen').height * 0.04, padding: 15, paddingVertical: 20,
+
+        label: { fontSize: 35, fontFamily: 'open-sans-b' },
+        subLabel: { marginLeft: 3, fontFamily: 'open-sans' }
+    },
+
+    searchWrapper: {
+        backgroundColor: '#f3f3f3',
+        borderRadius: 20,
+        flexDirection: 'row',
+        alignContent: 'center',
+        paddingVertical: 10,
+        marginTop: 15,
+
+        icon: {
+            height: 25,
+        },
+
+        placeholder: {
+            fontWeight: 'bold',
+        }
+
+    },
+
+    tagsWrapper: {
+        flexDirection: 'column',
+        backgroundColor: '#039dfc',
+        borderRadius: 20,
+        padding: 7,
+        marginLeft: 15,
+        paddingHorizontal: 20,
+
+        label: { color: '#fff' }
+    },
+
+    resultsWrapper: {
+        marginTop: 20,
+        marginHorizontal: 15,
+
+        itemWrapper: {
+            flexDirection: 'row',
+            marginBottom: 10,
+
+            cover: {
+                flex: 4,
+                minHeight: 70,
+                borderRadius: 10,
+            },
+
+            
+            contextWrapper: {
+                marginLeft: 10,
+                flex: 10,
+            }
+        },
     }
 });

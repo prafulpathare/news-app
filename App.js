@@ -1,40 +1,155 @@
-import { useFonts } from 'expo-font';
-import { useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './components/Home';
+import search from './components/Search';
 
-export default function App() {
-  const [fontsLoaded, fontError] = useFonts({
-    'Times-New-Roman': require('./assets/fonts/times/times new roman.ttf'),
-    'pt-sans': require('./assets/fonts/pt-sans/PTS55F.ttf'),
-    'open-sans-b': require('./assets/fonts/open-sans/bold.ttf'),
-    'open-sans': require('./assets/fonts/open-sans/regular.ttf'),
-  });
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+const colors = {
+  primary: '#000'
+}
+
+function MyTabs() {
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <StatusBar style="light" />
-      <Home />
-    </View>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          elevation: 0,
+          borderTopColor: '#ffffff',
+          marginHorizontal: 0,
+        }
+      }}
+    >
+      <Tab.Screen
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View>
+                <Image
+                  source={require("./assets/home.png")}
+                  resizeMode="contain"
+                  style={{ ...styles.bottomNav.icon, tintColor: focused ? colors.primary : '#999' }}
+                />
+              </View>
+            );
+          },
+        }}
+        name="Home" component={Home} />
+      <Tab.Screen
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View>
+                <Image
+                  source={require("./assets/search.png")}
+                  resizeMode="contain"
+                  style={{ ...styles.bottomNav.icon, width: 30, tintColor: focused ? colors.primary : '#999' }}
+                />
+              </View>
+            );
+          },
+        }}
+        name="Search" component={search} />
+        <Tab.Screen
+          options={{
+            tabBarHideOnKeyboard: true,
+            tabBarShowLabel: false,
+            tabBarIcon: ({ focused }) => {
+              return (
+                <View>
+                  <Image
+                    source={require("./assets/user.png")}
+                    resizeMode="contain"
+                    style={{ ...styles.bottomNav.icon, tintColor: focused ? colors.primary : '#999' }}
+                  />
+                </View>
+              );
+            },
+          }}
+          name="Watch" component={Home} />
+          <Tab.Screen
+            options={{
+              tabBarHideOnKeyboard: true,
+              tabBarShowLabel: false,
+              tabBarIcon: ({ focused }) => {
+                return (
+                  <View>
+                    <Image
+                      source={require("./assets/user.png")}
+                      resizeMode="contain"
+                      style={{ ...styles.bottomNav.icon, tintColor: focused ? colors.primary : '#999' }}
+                    />
+                  </View>
+                );
+              },
+            }}
+            name="User" component={Home} />
+    </Tab.Navigator>
   );
 }
 
 
+export default function App() {
+
+  useEffect(() => {
+
+  }, []);
+
+  return (
+    <NavigationContainer >
+      <StatusBar style="auto" />
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Tabs"
+          component={MyTabs}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    fontFamily: 'Times-New-Roman',
     backgroundColor: '#fff',
+    paddingBottom: 0,
+    paddingHorizontal: 10,
   },
+  text: {
+    header: {
+      fontWeight: 'bold',
+      fontSize: 17,
+      lineHeight: 50
+    }
+  },
+  bottomNav: {
+    icon: {
+      height: 25
+    }
+  },
+  preference: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 5,
+    paddingHorizontal: 20,
+    backgroundColor: '#f4f4f4',
+    margin: 10,
+    marginVertical: 5,
+    marginHorizontal: 5,
+    fontWeight: 'bold'
+  }
 });
