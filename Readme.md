@@ -21,4 +21,8 @@ App is developed to fetch and serve latest and trending news in globe and show s
     ```
 
 #
-Motivation: InShorts
+inspired by: 
+- idea: 
+  - InShorts
+- UI
+  - [dribble](https://dribbble.com/shots/20776712-GoRead-News-App)
