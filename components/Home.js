@@ -126,17 +126,16 @@ export default function Home() {
                                     padding: 10
                                 }}
                             >
-
+                                <View style={{
+                                    flex: 10,
+                                    margin: 5
+                                }}>
+                                    <Text style={styles.caption}>{item.title}</Text>
+                                </View>
                                 <Image source={{ uri: item.cover }} style={{
                                     flex: 4,
                                     borderRadius: 5,
                                 }} />
-                                <View style={{
-                                    flex: 10,
-                                    marginLeft: 10
-                                }}>
-                                    <Text style={styles.caption}>{item.title}</Text>
-                                </View>
                             </View>
                         )}
                     />

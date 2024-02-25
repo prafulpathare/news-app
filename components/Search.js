@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
-import { useCallback } from 'react';
-import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 
 const tags = [
     {
@@ -87,13 +87,15 @@ const data = [
 ];
 
 
-export default function search() {
+export default function Search({ navigation }) {
 
     const [fontsLoaded, fontError] = useFonts({
         'pt-sans': require('../assets/fonts/pt-sans/PTS55F.ttf'),
         'open-sans-b': require('../assets/fonts/open-sans/bold.ttf'),
         'open-sans': require('../assets/fonts/open-sans/regular.ttf'),
     });
+
+    const [tagIndex, setTagIndex] = useState(0);
 
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded || fontError) {
@@ -127,13 +129,13 @@ export default function search() {
                         showsHorizontalScrollIndicator={false}
                         data={tags}
                         renderItem={({ item, index, separators }) => (
-                            <View
+                            <TouchableOpacity
                                 key={item.key}
-                                onPress={() => this._onPress(item)}
-                                style={styles.tagsWrapper}
+                                onPress={() => { setTagIndex(index); }}
+                                style={{ ...styles.tagsWrapper, backgroundColor: index == tagIndex ? "#039dfc" : "#f4f4f4" }}
                             >
-                                <Text style={styles.tagsWrapper.label}>{item.label}</Text>
-                            </View>
+                                <Text style={{...styles.tagsWrapper.label, color: index == tagIndex ? "#fff" : "#444" }}>{item.label}</Text>
+                            </TouchableOpacity>
                         )}
                     />
 
@@ -141,16 +143,16 @@ export default function search() {
                         style={styles.resultsWrapper}
                         data={data}
                         renderItem={({ item, index, separators }) => (
-                            <View
+                            <TouchableOpacity
                                 key={item.key}
-                                onPress={() => this._onPress(item)}
+                                onPress={() => navigation.navigate('News', item) }
                                 style={styles.resultsWrapper.itemWrapper}
                             >
-                                <Image source={{ uri: item.cover }} style={styles.resultsWrapper.itemWrapper.cover} />
                                 <View style={styles.resultsWrapper.itemWrapper.contextWrapper}>
                                     <Text style={styles.caption}>{item.title}</Text>
                                 </View>
-                            </View>
+                                <Image source={{ uri: item.cover }} style={styles.resultsWrapper.itemWrapper.cover} />
+                            </TouchableOpacity>
                         )}
                     />
                 </View>
@@ -179,7 +181,8 @@ const styles = StyleSheet.create({
     },
 
     searchWrapper: {
-        backgroundColor: '#f3f3f3',
+        height: 50,
+        backgroundColor: '#d3d3d377',
         borderRadius: 20,
         flexDirection: 'row',
         alignContent: 'center',
@@ -187,24 +190,29 @@ const styles = StyleSheet.create({
         marginTop: 15,
 
         icon: {
-            height: 25,
+            height: 23,
+            width: 40,
+            marginTop: 2,
+            marginLeft: 5
         },
 
         placeholder: {
             fontWeight: 'bold',
+            lineHeight: 25,
+            width: Dimensions.get('screen').width - 100,
         }
 
     },
 
     tagsWrapper: {
         flexDirection: 'column',
-        backgroundColor: '#039dfc',
+        backgroundColor: '#eee',
         borderRadius: 20,
         padding: 7,
         marginLeft: 15,
         paddingHorizontal: 20,
 
-        label: { color: '#fff' }
+        label: { color: '#444' }
     },
 
     resultsWrapper: {
@@ -217,13 +225,13 @@ const styles = StyleSheet.create({
 
             cover: {
                 flex: 4,
+                marginLeft: 10,
                 minHeight: 70,
                 borderRadius: 10,
             },
 
             
             contextWrapper: {
-                marginLeft: 10,
                 flex: 10,
             }
         },

@@ -6,7 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './components/Home';
-import search from './components/Search';
+import Search from './components/Search';
+import News from './components/News';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,7 +25,9 @@ function MyTabs() {
         headerShown: false,
         tabBarStyle: {
           elevation: 0,
-          borderTopColor: '#ffffff',
+          borderTopColor: '#ffff',
+          // borderTopLeftRadius: 20,
+          // borderTopRightRadius: 20,
           marginHorizontal: 0,
         }
       }}
@@ -56,13 +59,13 @@ function MyTabs() {
                 <Image
                   source={require("./assets/search.png")}
                   resizeMode="contain"
-                  style={{ ...styles.bottomNav.icon, width: 30, tintColor: focused ? colors.primary : '#999' }}
+                  style={{ ...styles.bottomNav.icon, tintColor: focused ? colors.primary : '#999' }}
                 />
               </View>
             );
           },
         }}
-        name="Search" component={search} />
+        name="Search" component={Search} />
         <Tab.Screen
           options={{
             tabBarHideOnKeyboard: true,
@@ -117,6 +120,11 @@ export default function App() {
           component={MyTabs}
           options={{ headerShown: false }}
         />
+        <Stack.Screen 
+          name="News"
+          component={News}
+          options={{ headerShown: false }} 
+          />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -127,7 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingBottom: 0,
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
   },
   text: {
     header: {
