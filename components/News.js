@@ -1,6 +1,7 @@
 import { useFonts } from 'expo-font';
 import { useCallback, useEffect, useState } from 'react';
 import { Dimensions, FlatList, Image, Linking, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 
 
 const news = {
@@ -14,6 +15,7 @@ const news = {
 export default function News({ navigation, route }) {
 
     const [news, setNews] = useState({});
+    const [result, setResult] = useState(null);
 
     useEffect(() => {
         setNews(route.params);
@@ -24,6 +26,11 @@ export default function News({ navigation, route }) {
         'open-sans-b': require('../assets/fonts/open-sans/bold.ttf'),
         'open-sans': require('../assets/fonts/open-sans/regular.ttf'),
     });
+
+    const _handlePressButtonAsync = async (link) => {
+        let result = await WebBrowser.openBrowserAsync(link);
+        setResult(result);
+    };
 
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded || fontError) {
@@ -58,6 +65,8 @@ export default function News({ navigation, route }) {
                 </Text>
             </View>
 
+            <Text>{result && JSON.stringify(result)}</Text>
+
 
             <TouchableOpacity style={{
                 position: 'absolute',
@@ -80,7 +89,10 @@ export default function News({ navigation, route }) {
                 shadowRadius: 5,
         
                 elevation: 6,
-            }} onPress={() => Linking.openURL(news.link).catch(err => console.error(err))}>
+            }} onPress={() => {
+                // Linking.openURL(news.link).catch(err => console.error(err)) 
+                _handlePressButtonAsync(news.link);
+            }}>
                 <Text style={{
                     fontFamily: 'open-sans-b',
                     color: '#fff'
